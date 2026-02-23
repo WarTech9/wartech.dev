@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="John Warmann — Full-stack engineer specializing in mobile, web3, and AI. 15+ years shipping products to 50M+ users.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>〰️</text></svg>">
 <title>John Warmann — Three Waves</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -820,19 +822,173 @@
     footer { flex-direction: column; gap: 8px; padding: 16px 20px; }
     .scroll-line { display: none; }
   }
+
+  /* ============================================
+     ANIMATIONS
+  ============================================ */
+
+  /* Typing animation for nav mark */
+  .nav-mark-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+    animation: typeIn 1.2s steps(12) 0.5s forwards;
+  }
+
+  @keyframes typeIn {
+    to { width: 12ch; }
+  }
+
+  /* Fade in up animation for elements */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Staggered children animation */
+  .stagger-children .fade-in-up:nth-child(1) { transition-delay: 0.1s; }
+  .stagger-children .fade-in-up:nth-child(2) { transition-delay: 0.2s; }
+  .stagger-children .fade-in-up:nth-child(3) { transition-delay: 0.3s; }
+  .stagger-children .fade-in-up:nth-child(4) { transition-delay: 0.4s; }
+
+  /* Opening headline animation */
+  .opening-statement .line {
+    display: block;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: revealLine 0.8s ease forwards;
+  }
+
+  .opening-statement .line:nth-child(1) { animation-delay: 0.3s; }
+  .opening-statement .line:nth-child(2) { animation-delay: 0.5s; }
+  .opening-statement .line:nth-child(3) { animation-delay: 0.7s; }
+  .opening-statement .line:nth-child(4) { animation-delay: 0.9s; }
+
+  @keyframes revealLine {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes revealLineDim {
+    to {
+      opacity: 0.2;
+      transform: translateY(0);
+    }
+  }
+
+  .opening-statement .line.dim {
+    animation-name: revealLineDim;
+  }
+
+  /* Meta items fade in */
+  .meta-item {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  .meta-item:nth-child(1) { animation-delay: 1.1s; }
+  .meta-item:nth-child(2) { animation-delay: 1.25s; }
+  .meta-item:nth-child(3) { animation-delay: 1.4s; }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Project cards slide in */
+  .project {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease, background 0.25s, border-color 0.25s;
+  }
+
+  .project.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Stack tags pop in */
+  .stack-tag {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .stack-tag.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Wave header animation */
+  .wave-header {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .wave-header.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Throughline text reveal */
+  .throughline-text {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+
+  .throughline-text.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Smooth dot transition */
+  .wnav-dot {
+    transition: all 0.3s ease, transform 0.2s ease;
+  }
+
+  .wnav-dot:hover {
+    transform: scale(1.3);
+  }
+
+  .wnav-dot.active {
+    transform: scale(1.2);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-mark">john_warmann<span class="cursor"></span></div>
+  <div class="nav-mark"><span class="nav-mark-text">john_warmann</span><span class="cursor"></span></div>
   <div class="nav-right">
     <a href="#foundation">infra</a>
     <a href="#mobile">mobile</a>
     <a href="#web3">web3</a>
     <a href="#ai">ai</a>
-    <a href="#wwm" class="nav-cta">work with me</a>
+    <a href="https://t.me/Inn0vative1" target="_blank" class="nav-cta">work with me</a>
   </div>
 </nav>
 
@@ -847,17 +1003,17 @@
 </div>
 
 <!-- ===== OPENING ===== -->
-<section class="opening">
+<section class="opening" id="opening">
   <div class="opening-bg"></div>
 
   <div class="opening-inner">
     <div class="opening-prefix">// <span>john warmann</span></div>
 
     <h1 class="opening-statement">
-      <span class="dim">I don't wait for</span><br>
-      <span class="dim">the next wave.</span><br>
-      I'm already<br>
-      building on it.
+      <span class="line dim">I don't wait for</span>
+      <span class="line dim">the next wave.</span>
+      <span class="line">I'm already</span>
+      <span class="line">building on it.</span>
     </h1>
 
     <div class="opening-meta">
@@ -1174,27 +1330,163 @@
     </div>
 
     <div class="wwm-ctas">
-      <a href="mailto:john.warmann@gmail.com" class="btn-main btn-main-fill">Start a conversation →</a>
-      <a href="#" class="btn-main btn-main-ghost">Download resume</a>
+      <a href="https://t.me/Inn0vative1" target="_blank" class="btn-main btn-main-fill">Start a conversation →</a>
     </div>
 
     <div class="contact-line">
-      <a href="mailto:john.warmann@gmail.com">john.warmann@gmail.com</a>
-      <a href="#">linkedin.com/in/jwarmann</a>
-      <a href="#">github.com/wartech9</a>
+      <a href="https://t.me/Inn0vative1" target="_blank">t.me/Inn0vative1</a>
+      <a href="https://linkedin.com/in/jwarmann" target="_blank">linkedin.com/in/jwarmann</a>
+      <a href="https://github.com/wartech9" target="_blank">github.com/wartech9</a>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <span>© 2025 john_warmann</span>
+  <span>© 2026 john_warmann</span>
   <div class="footer-links">
-    <a href="#">github</a>
-    <a href="#">linkedin</a>
-    <a href="#">email</a>
+    <a href="https://t.me/Inn0vative1" target="_blank">telegram</a>
+    <a href="https://github.com/wartech9" target="_blank">github</a>
+    <a href="https://linkedin.com/in/jwarmann" target="_blank">linkedin</a>
   </div>
 </footer>
+
+<script>
+(function() {
+  // ============================================
+  // WAVE NAV DOTS — Click to scroll & active on scroll
+  // ============================================
+  const sections = ['opening', 'foundation', 'mobile', 'web3', 'ai', 'wwm'];
+  const dots = document.querySelectorAll('.wnav-dot');
+
+  // Click handlers
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      const target = document.getElementById(sections[i]);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Scroll-based active state
+  const sectionElements = sections.map(id => document.getElementById(id)).filter(Boolean);
+
+  function updateActiveDot() {
+    const scrollPos = window.scrollY + window.innerHeight / 3;
+
+    let activeIndex = 0;
+    sectionElements.forEach((section, i) => {
+      if (section.offsetTop <= scrollPos) {
+        activeIndex = i;
+      }
+    });
+
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === activeIndex);
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveDot, { passive: true });
+  updateActiveDot();
+
+  // ============================================
+  // SCROLL-TRIGGERED ANIMATIONS
+  // ============================================
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -10% 0px',
+    threshold: 0.1
+  };
+
+  const animateOnScroll = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+
+        // For staggered children (projects, stack tags)
+        const children = entry.target.querySelectorAll('.project, .stack-tag');
+        children.forEach((child, i) => {
+          setTimeout(() => {
+            child.classList.add('visible');
+          }, i * 100);
+        });
+      }
+    });
+  }, observerOptions);
+
+  // Observe wave headers
+  document.querySelectorAll('.wave-header').forEach(el => {
+    animateOnScroll.observe(el);
+  });
+
+  // Observe project containers
+  document.querySelectorAll('.projects').forEach(el => {
+    animateOnScroll.observe(el);
+  });
+
+  // Observe stack containers
+  document.querySelectorAll('.wave-stack').forEach(el => {
+    animateOnScroll.observe(el);
+  });
+
+  // Observe throughline
+  const throughlineText = document.querySelector('.throughline-text');
+  if (throughlineText) {
+    animateOnScroll.observe(throughlineText);
+  }
+
+  // Observe offerings
+  document.querySelectorAll('.offer').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = `opacity 0.5s ease ${i * 0.1}s, transform 0.5s ease ${i * 0.1}s`;
+
+    const offerObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    offerObserver.observe(el);
+  });
+
+  // ============================================
+  // SMOOTH PARALLAX ON WAVE BACKGROUNDS
+  // ============================================
+  const waveBgs = document.querySelectorAll('.wave-bg');
+
+  function updateParallax() {
+    const scrollY = window.scrollY;
+    waveBgs.forEach(bg => {
+      const section = bg.parentElement;
+      const rect = section.getBoundingClientRect();
+      const sectionTop = rect.top + scrollY;
+      const offset = (scrollY - sectionTop) * 0.05;
+      bg.style.transform = `translateY(${offset}px)`;
+    });
+  }
+
+  window.addEventListener('scroll', updateParallax, { passive: true });
+
+  // ============================================
+  // NAV BACKGROUND OPACITY ON SCROLL
+  // ============================================
+  const nav = document.querySelector('nav');
+
+  function updateNavOpacity() {
+    const scrollY = window.scrollY;
+    const opacity = Math.min(0.95, 0.85 + scrollY / 1000);
+    nav.style.background = `rgba(5, 5, 7, ${opacity})`;
+  }
+
+  window.addEventListener('scroll', updateNavOpacity, { passive: true });
+
+})();
+</script>
 
 </body>
 </html>
