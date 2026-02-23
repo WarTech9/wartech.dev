@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>John Warmann — Three Waves</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-display: 'Sora', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    overflow-x: hidden;
+    background: #050507;
+    color: #e8e6e1;
+  }
+
+  /* ============================================
+     NAV
+  ============================================ */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(5, 5, 7, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .nav-mark {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .nav-mark .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: rgba(255,255,255,0.6);
+    margin-left: 2px;
+    animation: blink 1.1s step-end infinite;
+    vertical-align: text-bottom;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .nav-right {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .nav-right a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    letter-spacing: 0px;
+  }
+  .nav-right a:hover {
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .nav-cta {
+    color: #050507 !important;
+    background: #e8e6e1 !important;
+    font-weight: 600;
+  }
+  .nav-cta:hover {
+    background: #fff !important;
+    color: #050507 !important;
+  }
+
+  /* ============================================
+     WAVE DOTS
+  ============================================ */
+  .wave-nav {
+    position: fixed;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .wnav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .wnav-dot:hover { background: rgba(255,255,255,0.5); }
+  .wnav-dot.active {
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255,255,255,0.3);
+  }
+
+  /* ============================================
+     OPENING
+  ============================================ */
+  .opening {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .opening-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  .opening-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black, transparent 70%);
+  }
+
+  .opening-prefix {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: rgba(255,255,255,0.2);
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  .opening-prefix span { color: rgba(255,255,255,0.4); }
+
+  .opening-statement {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 6vw, 76px);
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -3px;
+    max-width: 850px;
+    position: relative;
+    z-index: 1;
+  }
+  .opening-statement .dim { opacity: 0.2; }
+
+  .opening-meta {
+    margin-top: 40px;
+    display: flex;
+    gap: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .meta-val {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 700;
+    color: #e8e6e1;
+  }
+
+  .meta-key {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+  }
+
+  .scroll-line {
+    position: absolute;
+    bottom: 48px;
+    left: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .scroll-line span {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.15);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .scroll-line-bar {
+    width: 40px;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.4);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  /* ============================================
+     WAVE SECTION — Shared
+  ============================================ */
+  .wave {
+    min-height: 100vh;
+    padding: 100px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wave-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .wave-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .wave-header {
+    margin-bottom: 56px;
+  }
+
+  .wave-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+
+  .wave-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 800;
+    letter-spacing: -2.5px;
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+
+  .wave-desc {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.8;
+    max-width: 600px;
+  }
+
+  /* Project blocks — terminal style */
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .project {
+    padding: 28px 32px;
+    border-radius: 8px;
+    transition: all 0.25s;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: start;
+    cursor: default;
+  }
+
+  .project:hover {
+    transform: translateX(4px);
+  }
+
+  .project-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+
+  .project h4 {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .project-role {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .project-body {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  .project-stats-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: right;
+    min-width: 140px;
+    padding-top: 2px;
+  }
+
+  .ps-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .ps-val {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .ps-key {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  /* Tech stack line */
+  .wave-stack {
+    margin-top: 40px;
+    padding-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .stack-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ============================================
+     WAVE 0: FOUNDATION — Dark steel, utilitarian
+  ============================================ */
+  .wave-foundation {
+    background: #0c0f12;
+    color: #8a9aaa;
+  }
+
+  .wave-foundation .wave-bg {
+    background:
+      radial-gradient(ellipse 50% 50% at 60% 30%, rgba(120, 160, 200, 0.04), transparent),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 43px,
+        rgba(120, 160, 200, 0.02) 43px,
+        rgba(120, 160, 200, 0.02) 44px
+      );
+  }
+
+  .wave-foundation .wave-label { color: #5a8aaa; }
+  .wave-foundation .wave-title { color: #c8d6e0; }
+  .wave-foundation .wave-desc { color: #5a6a7a; }
+
+  .wave-foundation .project {
+    background: rgba(120, 160, 200, 0.03);
+    border: 1px solid rgba(120, 160, 200, 0.06);
+  }
+  .wave-foundation .project:hover {
+    background: rgba(120, 160, 200, 0.06);
+    border-color: rgba(120, 160, 200, 0.15);
+  }
+  .wave-foundation .project h4 { color: #c8d6e0; }
+  .wave-foundation .project-role {
+    color: #5a8aaa;
+    background: rgba(120, 160, 200, 0.08);
+  }
+  .wave-foundation .project-body { color: #5a6a7a; }
+  .wave-foundation .ps-val { color: #5a8aaa; }
+  .wave-foundation .ps-key { color: #3a4a5a; }
+
+  .wave-foundation .stack-tag {
+    background: rgba(120, 160, 200, 0.05);
+    color: #5a8aaa;
+    border: 1px solid rgba(120, 160, 200, 0.1);
+  }
+
+  /* ============================================
+     WAVE 1: MOBILE — Light, crisp
+  ============================================ */
+  .wave-mobile {
+    background: #f5f2ed;
+    color: #1a1a1a;
+  }
+
+  .wave-mobile .wave-bg {
+    background:
+      radial-gradient(ellipse 60% 50% at 85% 15%, rgba(0, 122, 255, 0.05), transparent),
+      radial-gradient(ellipse 40% 40% at 15% 85%, rgba(255, 149, 0, 0.03), transparent);
+  }
+
+  .wave-mobile .wave-label { color: #007AFF; }
+  .wave-mobile .wave-title { color: #111; }
+  .wave-mobile .wave-desc { color: #666; }
+
+  .wave-mobile .project {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .wave-mobile .project:hover {
+    background: rgba(255,255,255,0.95);
+    border-color: rgba(0, 122, 255, 0.15);
+  }
+  .wave-mobile .project h4 { color: #111; }
+  .wave-mobile .project-role {
+    color: #007AFF;
+    background: rgba(0, 122, 255, 0.08);
+  }
+  .wave-mobile .project-body { color: #555; }
+  .wave-mobile .ps-val { color: #111; }
+  .wave-mobile .ps-key { color: #999; }
+
+  .wave-mobile .stack-tag {
+    background: rgba(0, 122, 255, 0.06);
+    color: #007AFF;
+    border: 1px solid rgba(0, 122, 255, 0.1);
+  }
+
+  /* ============================================
+     WAVE 2: WEB3 — Dark, green grid
+  ============================================ */
+  .wave-web3 {
+    background: #070b0e;
+    color: #b0c4d8;
+  }
+
+  .wave-web3 .wave-bg {
+    background-image:
+      radial-gradient(ellipse 50% 50% at 75% 25%, rgba(0, 232, 157, 0.06), transparent),
+      linear-gradient(rgba(0, 232, 157, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 232, 157, 0.025) 1px, transparent 1px);
+    background-size: 100% 100%, 44px 44px, 44px 44px;
+  }
+
+  .wave-web3 .wave-label { color: #00e89d; }
+  .wave-web3 .wave-title { color: #e8e6e1; }
+  .wave-web3 .wave-desc { color: #5a7a6a; }
+
+  .wave-web3 .project {
+    background: rgba(0, 232, 157, 0.025);
+    border: 1px solid rgba(0, 232, 157, 0.06);
+  }
+  .wave-web3 .project:hover {
+    background: rgba(0, 232, 157, 0.05);
+    border-color: rgba(0, 232, 157, 0.2);
+  }
+  .wave-web3 .project h4 { color: #e0ece5; }
+  .wave-web3 .project-role {
+    color: #00e89d;
+    background: rgba(0, 232, 157, 0.08);
+  }
+  .wave-web3 .project-body { color: #5a7a6a; }
+  .wave-web3 .ps-val { color: #00e89d; }
+  .wave-web3 .ps-key { color: #3a5a4a; }
+
+  .wave-web3 .stack-tag {
+    background: rgba(0, 232, 157, 0.05);
+    color: #00e89d;
+    border: 1px solid rgba(0, 232, 157, 0.1);
+  }
+
+  /* ============================================
+     WAVE 3: AI — Deep purple/warm
+  ============================================ */
+  .wave-ai {
+    background: #0a0714;
+    color: #baa8d4;
+  }
+
+  .wave-ai .wave-bg {
+    background:
+      radial-gradient(ellipse 50% 40% at 25% 35%, rgba(168, 85, 247, 0.07), transparent),
+      radial-gradient(ellipse 40% 40% at 75% 70%, rgba(255, 107, 53, 0.04), transparent);
+  }
+
+  .wave-ai .wave-label { color: #a855f7; }
+  .wave-ai .wave-title { color: #ede6f5; }
+  .wave-ai .wave-desc { color: #6a5a7a; }
+
+  .wave-ai .project {
+    background: rgba(168, 85, 247, 0.03);
+    border: 1px solid rgba(168, 85, 247, 0.06);
+  }
+  .wave-ai .project:hover {
+    background: rgba(168, 85, 247, 0.06);
+    border-color: rgba(168, 85, 247, 0.2);
+  }
+  .wave-ai .project h4 { color: #e0d6f0; }
+  .wave-ai .project-role {
+    color: #a855f7;
+    background: rgba(168, 85, 247, 0.1);
+  }
+  .wave-ai .project-body { color: #6a5a7a; }
+  .wave-ai .ps-val { color: #a855f7; }
+  .wave-ai .ps-key { color: #4a3a5a; }
+
+  .wave-ai .stack-tag {
+    background: rgba(168, 85, 247, 0.06);
+    color: #a855f7;
+    border: 1px solid rgba(168, 85, 247, 0.1);
+  }
+
+  /* ============================================
+     TRANSITIONS
+  ============================================ */
+  .wave-transition {
+    height: 160px;
+    position: relative;
+  }
+  .wt-dark-to-light { background: linear-gradient(to bottom, #050507, #f5f2ed); }
+  .wt-light-to-dark { background: linear-gradient(to bottom, #f5f2ed, #070b0e); }
+  .wt-dark-to-purple { background: linear-gradient(to bottom, #070b0e, #0a0714); }
+  .wt-purple-to-dark { background: linear-gradient(to bottom, #0a0714, #050507); }
+
+  /* ============================================
+     THROUGHLINE
+  ============================================ */
+  .throughline {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 40px;
+    background: #050507;
+    position: relative;
+  }
+
+  .throughline-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 25% 25% at 25% 50%, rgba(0, 122, 255, 0.03), transparent),
+      radial-gradient(ellipse 25% 25% at 50% 50%, rgba(0, 232, 157, 0.03), transparent),
+      radial-gradient(ellipse 25% 25% at 75% 50%, rgba(168, 85, 247, 0.03), transparent);
+  }
+
+  .throughline-text {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3.8vw, 44px);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -1.5px;
+    max-width: 700px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .c-mobile { color: #007AFF; }
+  .c-web3 { color: #00e89d; }
+  .c-ai { color: #a855f7; }
+
+  .throughline-sub {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: rgba(255,255,255,0.25);
+    max-width: 500px;
+    margin-top: 24px;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============================================
+     WORK WITH ME
+  ============================================ */
+  .wwm {
+    padding: 100px 48px 120px;
+    background: #050507;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .wwm-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .wwm-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+
+  .wwm-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.1;
+    margin-bottom: 48px;
+  }
+
+  /* Offerings as terminal-style blocks */
+  .offerings {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    margin-bottom: 56px;
+  }
+
+  .offer {
+    padding: 28px 24px;
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.015);
+    transition: all 0.25s;
+  }
+  .offer:hover {
+    border-color: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .offer-name {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #e8e6e1;
+  }
+  .offer-name::before {
+    content: '→ ';
+    opacity: 0.3;
+  }
+
+  .offer p {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    line-height: 1.6;
+  }
+
+  .wwm-ctas {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 48px;
+  }
+
+  .btn-main {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-main-fill {
+    background: #e8e6e1;
+    color: #050507;
+  }
+  .btn-main-fill:hover {
+    background: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 24px rgba(255,255,255,0.1);
+  }
+
+  .btn-main-ghost {
+    background: transparent;
+    color: rgba(255,255,255,0.35);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .btn-main-ghost:hover {
+    color: rgba(255,255,255,0.6);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  /* Contact line */
+  .contact-line {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .contact-line a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact-line a:hover { color: rgba(255,255,255,0.6); }
+  .contact-line a::before {
+    content: '// ';
+    opacity: 0.4;
+  }
+
+  /* ============================================
+     FOOTER
+  ============================================ */
+  footer {
+    padding: 20px 48px;
+    border-top: 1px solid rgba(255,255,255,0.03);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #050507;
+  }
+
+  footer span, footer a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.15);
+    text-decoration: none;
+  }
+  footer a:hover { color: rgba(255,255,255,0.4); }
+
+  .footer-links { display: flex; gap: 20px; }
+
+  /* ============================================
+     RESPONSIVE
+  ============================================ */
+  @media (min-width: 1400px) {
+    .wave { padding-left: 80px; padding-right: 80px; }
+    .opening { padding-left: 80px; padding-right: 80px; }
+    .wwm { padding-left: 80px; padding-right: 80px; }
+    nav { padding-left: 80px; padding-right: 80px; }
+    footer { padding-left: 80px; padding-right: 80px; }
+  }
+
+  @media (min-width: 1800px) {
+    .wave { padding-left: calc((100vw - 1100px) / 2); padding-right: calc((100vw - 1100px) / 2); }
+    .opening { padding-left: calc((100vw - 1100px) / 2); padding-right: calc((100vw - 1100px) / 2); }
+    .wwm { padding-left: calc((100vw - 1100px) / 2); padding-right: calc((100vw - 1100px) / 2); }
+  }
+
+  @media (max-width: 900px) {
+    .project {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .project-stats-col {
+      flex-direction: row;
+      gap: 24px;
+      text-align: left;
+      flex-wrap: wrap;
+    }
+    .ps-item { align-items: flex-start; }
+    .offerings { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-right a:not(.nav-cta) { display: none; }
+    .wave { padding: 72px 20px; }
+    .opening { padding: 100px 20px 60px; }
+    .opening-meta { flex-wrap: wrap; gap: 24px; }
+    .wave-nav { display: none; }
+    .wwm { padding: 64px 20px 80px; }
+    .wwm-ctas { flex-direction: column; }
+    .contact-line { flex-direction: column; gap: 10px; }
+    footer { flex-direction: column; gap: 8px; padding: 16px 20px; }
+    .scroll-line { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-mark">john_warmann<span class="cursor"></span></div>
+  <div class="nav-right">
+    <a href="#foundation">infra</a>
+    <a href="#mobile">mobile</a>
+    <a href="#web3">web3</a>
+    <a href="#ai">ai</a>
+    <a href="#wwm" class="nav-cta">work with me</a>
+  </div>
+</nav>
+
+<!-- WAVE NAV DOTS -->
+<div class="wave-nav">
+  <div class="wnav-dot active"></div>
+  <div class="wnav-dot"></div>
+  <div class="wnav-dot"></div>
+  <div class="wnav-dot"></div>
+  <div class="wnav-dot"></div>
+  <div class="wnav-dot"></div>
+</div>
+
+<!-- ===== OPENING ===== -->
+<section class="opening">
+  <div class="opening-bg"></div>
+
+  <div class="opening-inner">
+    <div class="opening-prefix">// <span>john warmann</span></div>
+
+    <h1 class="opening-statement">
+      <span class="dim">I don't wait for</span><br>
+      <span class="dim">the next wave.</span><br>
+      I'm already<br>
+      building on it.
+    </h1>
+
+    <div class="opening-meta">
+      <div class="meta-item">
+        <span class="meta-val">15+</span>
+        <span class="meta-key">// years shipping</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-val">50M+</span>
+        <span class="meta-key">// users reached</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-val">$15M+</span>
+        <span class="meta-key">// assets managed</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-line">
+    <div class="scroll-line-bar"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<!-- TRANSITION -->
+<div class="wave-transition" style="height: 160px; background: linear-gradient(to bottom, #050507, #0c0f12);"></div>
+
+<!-- ===== WAVE 0: THE FOUNDATION ===== -->
+<section class="wave wave-foundation" id="foundation">
+  <div class="wave-bg"></div>
+  <div class="wave-content">
+    <div class="wave-header">
+      <div class="wave-label">wave_00 // the foundation</div>
+      <h2 class="wave-title">Every wave runs<br>on solid infra.</h2>
+      <p class="wave-desc">Before the frontend, before the contract, before the agent — there's the system that makes it all work. Backend architecture, databases, queues, deployments. This is what I build everything on.</p>
+    </div>
+
+    <div class="projects">
+      <div class="project">
+        <div>
+          <div class="project-header">
+            <h4>API & Service Architecture</h4>
+            <span class="project-role">Core Discipline</span>
+          </div>
+          <p class="project-body">NestJS and Express APIs powering real-time applications. Session management, data aggregation from multiple sources, WebSocket integration, Bull queues for async processing. REST and GraphQL interfaces.</p>
+        </div>
+        <div class="project-stats-col">
+          <div class="ps-item"><span class="ps-val">NestJS</span><span class="ps-key">primary framework</span></div>
+          <div class="ps-item"><span class="ps-val">Real-time</span><span class="ps-key">websockets + queues</span></div>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <div class="project-header">
+            <h4>Data & Storage</h4>
+            <span class="project-role">Core Discipline</span>
+          </div>
+          <p class="project-body">PostgreSQL for relational data, MongoDB for documents, Redis for caching and pub/sub, Supabase for rapid prototyping with auth and real-time subscriptions. Data modeling across SQL and NoSQL systems.</p>
+        </div>
+        <div class="project-stats-col">
+          <div class="ps-item"><span class="ps-val">Postgres</span><span class="ps-key">primary db</span></div>
+          <div class="ps-item"><span class="ps-val">Mongo + Redis</span><span class="ps-key">docs + cache</span></div>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <div class="project-header">
+            <h4>Cloud & DevOps</h4>
+            <span class="project-role">Core Discipline</span>
+          </div>
+          <p class="project-body">AWS (EC2, S3, RDS, Lambda), Railway, Vercel for deployment. Docker and Kubernetes for containerization. GitHub Actions CI/CD pipelines. Multi-environment deployment standardization.</p>
+        </div>
+        <div class="project-stats-col">
+          <div class="ps-item"><span class="ps-val">AWS</span><span class="ps-key">primary cloud</span></div>
+          <div class="ps-item"><span class="ps-val">Docker + K8s</span><span class="ps-key">containerized</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wave-stack">
+      <span class="stack-tag">Node.js</span>
+      <span class="stack-tag">NestJS</span>
+      <span class="stack-tag">Express</span>
+      <span class="stack-tag">PostgreSQL</span>
+      <span class="stack-tag">MongoDB</span>
+      <span class="stack-tag">Redis</span>
+      <span class="stack-tag">Supabase</span>
+      <span class="stack-tag">Docker</span>
+      <span class="stack-tag">Kubernetes</span>
+      <span class="stack-tag">AWS</span>
+      <span class="stack-tag">Railway</span>
+      <span class="stack-tag">Vercel</span>
+      <span class="stack-tag">Bull</span>
+      <span class="stack-tag">GraphQL</span>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSITION -->
+<div class="wave-transition wt-dark-to-light" style="background: linear-gradient(to bottom, #0c0f12, #f5f2ed);"></div>
+
+<!-- ===== WAVE 1: MOBILE ===== -->
+<section class="wave wave-mobile" id="mobile">
+  <div class="wave-bg"></div>
+  <div class="wave-content">
+    <div class="wave-header">
+      <div class="wave-label">wave_01 // mobile</div>
+      <h2 class="wave-title">Native apps.<br>Millions of users.</h2>
+      <p class="wave-desc">From building Canada's first live sports streaming app to shipping enterprise media platforms for NBC and Bell — native mobile experiences at scale, from architecture through app store.</p>
+    </div>
+
+    <div class="projects">
+      <div class="project">
+        <div>
+          <div class="project-header">
+            <h4>CBC / Radio-Canada</h4>
+            <span class="project-role">iOS Developer</span>
+          </div>
+          <p class="project-body">Built CBC Hockey, Music, and News apps. Pioneered the first live video streaming in any Canadian mobile app. Architected push notification service at scale. Awarded President's Award for Innovation.</p>
+        </div>
+        <div class="project-stats-col">
+          <div class="ps-item"><span class="ps-val">50M+</span><span class="ps-key">pushes / month</span></div>
+          <div class="ps-item"><span class="ps-val">First</span><span class="ps-key">live stream in CA</span></div>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <div class="project-header">
+            <h4>Clearbridge Mobile</h4>
+            <span class="project-role">Tech Lead</span>
+          </div>
+          <p class="project-body">Led teams of 10 developers across 4 platforms delivering enterprise apps for NBC Sports, NY Yankees Network, and Bell Canada. Native iOS, React Native, full technical ownership and documentation.</p>
+        </div>
+        <div class="project-stats-col">
+          <div class="ps-item"><span class="ps-val">10+</span><span class="ps-key">devs led</span></div>
+          <div class="ps-item"><span class="ps-val">4</span><span class="ps-key">platforms</span></div>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <div class="project-header">
+            <h4>LocalizeWiz</h4>
+            <span class="project-role">Founder</span>
+          </div>
+          <p class="project-body">Full-stack localization platform: native Mac app with Xcode integration and filesystem monitoring, Node.js backend on AWS, Angular frontend. Integrated Google Cloud, Azure Cognitive Services, Stripe.</p>
+        </div>
+        <div class="project-stats-col">
+          <div class="ps-item"><span class="ps-val">Mac + Web</span><span class="ps-key">full stack</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wave-stack">
+      <span class="stack-tag">Swift</span>
+      <span class="stack-tag">SwiftUI</span>
+      <span class="stack-tag">UIKit</span>
+      <span class="stack-tag">Kotlin</span>
+      <span class="stack-tag">React Native</span>
+      <span class="stack-tag">Expo</span>
+      <span class="stack-tag">Java</span>
+      <span class="stack-tag">Obj-C</span>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSITION -->
+<div class="wave-transition wt-light-to-dark"></div>
+
+<!-- ===== WAVE 2: WEB3 ===== -->
+<section class="wave wave-web3" id="web3">
+  <div class="wave-bg"></div>
+  <div class="wave-content">
+    <div class="wave-header">
+      <div class="wave-label">wave_02 // web3</div>
+      <h2 class="wave-title">Smart contracts.<br>Real money.</h2>
+      <p class="wave-desc">Self-taught Solidity before most people had heard of DeFi. Deployed contracts across Ethereum, Optimism, and Arbitrum. Built wallets, stablecoins, and cross-chain systems.</p>
+    </div>
+
+    <div class="projects">
+      <div class="project">
+        <div>
+          <div class="project-header">
+            <h4>UXD Finance</h4>
+            <span class="project-role">Lead Smart Contract Engineer</span>
+          </div>
+          <p class="project-body">Ported algorithmic stablecoin from Solana to EVM. Integrated Curve Finance, Perpetual Protocol, Rage Trade. Managed multisig treasury deploying $15M+ across yield-earning DeFi protocols.</p>
+        </div>
+        <div class="project-stats-col">
+          <div class="ps-item"><span class="ps-val">$15M+</span><span class="ps-key">managed</span></div>
+          <div class="ps-item"><span class="ps-val">3 chains</span><span class="ps-key">deployed</span></div>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <div class="project-header">
+            <h4>CHEDDA Technologies</h4>
+            <span class="project-role">CTO & Tech Lead</span>
+          </div>
+          <p class="project-body">Architected full-stack DeFi platform. NestJS API with session management, React frontend with real-time WebSocket data sync, PostgreSQL, multi-environment CI/CD. Led product and engineering end-to-end.</p>
+        </div>
+        <div class="project-stats-col">
+          <div class="ps-item"><span class="ps-val">Full-stack</span><span class="ps-key">architecture</span></div>
+          <div class="ps-item"><span class="ps-val">Real-time</span><span class="ps-key">data sync</span></div>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <div class="project-header">
+            <h4>Tip Network</h4>
+            <span class="project-role">Founder</span>
+          </div>
+          <p class="project-body">Crypto wallet app with username-to-address mapping — a precursor to ENS-style resolution. Self-taught Solidity within weeks. Built iOS & Android app, managed team of 8 across dev, design, product.</p>
+        </div>
+        <div class="project-stats-col">
+          <div class="ps-item"><span class="ps-val">8</span><span class="ps-key">team size</span></div>
+          <div class="ps-item"><span class="ps-val">Pre-ENS</span><span class="ps-key">name resolution</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wave-stack">
+      <span class="stack-tag">Solidity</span>
+      <span class="stack-tag">Foundry</span>
+      <span class="stack-tag">Hardhat</span>
+      <span class="stack-tag">Ethers.js</span>
+      <span class="stack-tag">Viem</span>
+      <span class="stack-tag">LayerZero</span>
+      <span class="stack-tag">OpenZeppelin</span>
+      <span class="stack-tag">Thirdweb</span>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSITION -->
+<div class="wave-transition wt-dark-to-purple"></div>
+
+<!-- ===== WAVE 3: AI ===== -->
+<section class="wave wave-ai" id="ai">
+  <div class="wave-bg"></div>
+  <div class="wave-content">
+    <div class="wave-header">
+      <div class="wave-label">wave_03 // ai</div>
+      <h2 class="wave-title">Agents.<br>Automation.<br>What's next.</h2>
+      <p class="wave-desc">Building AI agent architectures, RAG pipelines, and production automation systems. Same pattern — see the wave early, go deep, ship before the crowd arrives.</p>
+    </div>
+
+    <div class="projects">
+      <div class="project">
+        <div>
+          <div class="project-header">
+            <h4>AI Agent Systems</h4>
+            <span class="project-role">Builder & Architect</span>
+          </div>
+          <p class="project-body">Designing and shipping AI agent architectures with LangChain and LangGraph. RAG pipelines with Pinecone vector search. Production-grade n8n automation workflows connecting AI to real-world systems.</p>
+        </div>
+        <div class="project-stats-col">
+          <div class="ps-item"><span class="ps-val">RAG</span><span class="ps-key">vector pipelines</span></div>
+          <div class="ps-item"><span class="ps-val">Agents</span><span class="ps-key">multi-step</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wave-stack">
+      <span class="stack-tag">LangChain</span>
+      <span class="stack-tag">LangGraph</span>
+      <span class="stack-tag">Pinecone</span>
+      <span class="stack-tag">RAG</span>
+      <span class="stack-tag">n8n</span>
+      <span class="stack-tag">Python</span>
+      <span class="stack-tag">Claude Code</span>
+      <span class="stack-tag">Cursor</span>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSITION -->
+<div class="wave-transition wt-purple-to-dark"></div>
+
+<!-- ===== THROUGHLINE ===== -->
+<section class="throughline">
+  <div class="throughline-bg"></div>
+  <p class="throughline-text">
+    The skill isn't <span class="c-mobile">mobile</span> or <span class="c-web3">web3</span> or <span class="c-ai">AI</span>.<br>
+    It's the foundation underneath — and knowing where to build next.
+  </p>
+  <p class="throughline-sub">// three waves. each time: early entry, deep execution, real products, real users.</p>
+</section>
+
+<!-- ===== WORK WITH ME ===== -->
+<section class="wwm" id="wwm">
+  <div class="wwm-inner">
+    <div class="wwm-label">// work_with_me</div>
+    <h2 class="wwm-title">Let's build<br>something real.</h2>
+
+    <div class="offerings">
+      <div class="offer">
+        <div class="offer-name">Technical Leadership</div>
+        <p>Fractional CTO, architecture reviews, team scaling. I set the technical direction and make sure it ships.</p>
+      </div>
+      <div class="offer">
+        <div class="offer-name">Mobile Development</div>
+        <p>Native iOS/Android, React Native. Greenfield to app store to millions of users.</p>
+      </div>
+      <div class="offer">
+        <div class="offer-name">Web3 & Contracts</div>
+        <p>Solidity, DeFi integrations, protocol architecture. Contracts that handle real money safely.</p>
+      </div>
+    </div>
+
+    <div class="wwm-ctas">
+      <a href="mailto:john.warmann@gmail.com" class="btn-main btn-main-fill">Start a conversation →</a>
+      <a href="#" class="btn-main btn-main-ghost">Download resume</a>
+    </div>
+
+    <div class="contact-line">
+      <a href="mailto:john.warmann@gmail.com">john.warmann@gmail.com</a>
+      <a href="#">linkedin.com/in/jwarmann</a>
+      <a href="#">github.com/wartech9</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 john_warmann</span>
+  <div class="footer-links">
+    <a href="#">github</a>
+    <a href="#">linkedin</a>
+    <a href="#">email</a>
+  </div>
+</footer>
+
+</body>
+</html>
