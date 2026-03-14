@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Photography by John Warmann — mountains, trails, and cities from wherever the work takes me.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>〰️</text></svg>">
+<title>Out There — John Warmann</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-display: 'Sora', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    overflow-x: hidden;
+    background: #050507;
+    color: #e8e6e1;
+  }
+
+  /* ============================================
+     NAV
+  ============================================ */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(5, 5, 7, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .nav-mark {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+  }
+  .nav-mark .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: rgba(255,255,255,0.6);
+    margin-left: 2px;
+    animation: blink 1.1s step-end infinite;
+    vertical-align: text-bottom;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .nav-right {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .nav-right a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    letter-spacing: 0px;
+  }
+  .nav-right a:hover {
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .nav-active {
+    color: rgba(255,255,255,0.9) !important;
+    background: rgba(255,255,255,0.07) !important;
+  }
+
+  .nav-cta {
+    color: #050507 !important;
+    background: #e8e6e1 !important;
+    font-weight: 600;
+  }
+  .nav-cta:hover {
+    background: #fff !important;
+    color: #050507 !important;
+  }
+
+  .nav-mark-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+    animation: typeIn 1.2s steps(12) 0.5s forwards;
+  }
+
+  @keyframes typeIn {
+    to { width: 12ch; }
+  }
+
+  /* ============================================
+     PAGE HEADER
+  ============================================ */
+  .page-header {
+    padding: 140px 48px 56px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .page-header-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+  }
+
+  .page-header-title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+
+  .page-header-intro {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: rgba(255,255,255,0.3);
+    line-height: 1.75;
+    max-width: 480px;
+  }
+
+  /* ============================================
+     GALLERY
+  ============================================ */
+  .gallery-wrap {
+    padding: 0 24px 100px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .gallery {
+    columns: 3;
+    column-gap: 3px;
+  }
+
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: 3px;
+    position: relative;
+    overflow: hidden;
+    display: block;
+    opacity: 0;
+    transform: scale(0.97);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .gallery-item.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .gallery-item img,
+  .gallery-item .photo-placeholder {
+    width: 100%;
+    display: block;
+  }
+
+  /* Placeholder styling for before real photos are added */
+  .photo-placeholder {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .gallery-item figcaption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 40px 14px 12px;
+    background: linear-gradient(transparent, rgba(5, 5, 7, 0.7));
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.5px;
+    pointer-events: none;
+    transition: color 0.3s ease;
+  }
+
+  .gallery-item:hover img {
+    filter: brightness(1.06);
+    transition: filter 0.4s ease;
+  }
+
+  .gallery-item img {
+    transition: filter 0.4s ease;
+  }
+
+  .gallery-item:hover figcaption {
+    color: rgba(255,255,255,0.85);
+  }
+
+  /* ============================================
+     LIGHTBOX
+  ============================================ */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(5, 5, 7, 0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .lightbox.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .lightbox-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 92vw;
+    max-height: 92vh;
+  }
+
+  .lightbox-img-wrap {
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .lightbox-img-wrap img {
+    display: block;
+    max-width: 88vw;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .lightbox-img-wrap img.loaded {
+    opacity: 1;
+  }
+
+  .lightbox-caption {
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+    align-self: flex-start;
+  }
+
+  .lightbox-counter {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.5px;
+  }
+
+  /* Close button */
+  .lightbox-close {
+    position: fixed;
+    top: 24px;
+    right: 28px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    color: rgba(255,255,255,0.5);
+    font-family: var(--font-mono);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    line-height: 1;
+  }
+  .lightbox-close:hover {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.9);
+    border-color: rgba(255,255,255,0.25);
+  }
+
+  /* Prev / next arrows */
+  .lightbox-prev,
+  .lightbox-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    color: rgba(255,255,255,0.4);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .lightbox-prev { left: 20px; }
+  .lightbox-next { right: 20px; }
+  .lightbox-prev:hover,
+  .lightbox-next:hover {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.9);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  /* Cursor on gallery items */
+  .gallery-item { cursor: zoom-in; }
+
+  /* ============================================
+     ABOUT STRIP
+  ============================================ */
+  .about-strip {
+    padding: 0 48px 72px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .about-inner {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .about-photo {
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: block;
+  }
+
+  .about-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+  }
+
+  .about-bio {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.85;
+    max-width: 520px;
+  }
+
+  @media (max-width: 900px) {
+    .about-inner {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .about-photo { max-width: 240px; }
+  }
+
+  @media (max-width: 768px) {
+    .about-strip { padding: 0 20px 56px; }
+  }
+
+  @media (max-width: 768px) {
+    .lightbox-prev { left: 8px; }
+    .lightbox-next { right: 8px; }
+    .lightbox-close { top: 16px; right: 16px; }
+    .lightbox-img-wrap img { max-width: 96vw; max-height: 75vh; }
+  }
+
+  /* ============================================
+     FOOTER
+  ============================================ */
+  footer {
+    padding: 20px 48px;
+    border-top: 1px solid rgba(255,255,255,0.03);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #050507;
+  }
+
+  footer span, footer a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.15);
+    text-decoration: none;
+  }
+  footer a:hover { color: rgba(255,255,255,0.4); }
+  .footer-links { display: flex; gap: 20px; }
+
+  /* ============================================
+     RESPONSIVE
+  ============================================ */
+  @media (min-width: 1400px) {
+    nav { padding-left: 80px; padding-right: 80px; }
+    .page-header { padding-left: 80px; padding-right: 80px; }
+    .gallery-wrap { padding-left: 48px; padding-right: 48px; }
+    footer { padding-left: 80px; padding-right: 80px; }
+  }
+
+  @media (max-width: 900px) {
+    .gallery { columns: 2; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-right a:not(.nav-cta) { display: none; }
+    .page-header { padding: 120px 20px 40px; }
+    .gallery-wrap { padding: 0 0 60px; }
+    .gallery { columns: 2; column-gap: 2px; }
+    footer { flex-direction: column; gap: 8px; padding: 16px 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .gallery { columns: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-mark"><span class="nav-mark-text">john_warmann</span><span class="cursor"></span></a>
+  <div class="nav-right">
+    <a href="projects.html">projects</a>
+    <a href="experience.html">experience</a>
+    <a href="life.html" class="nav-active">life</a>
+    <a href="https://t.me/Inn0vative1" target="_blank" class="nav-cta">work with me →</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-label">// out there</div>
+  <h1 class="page-header-title">Every view earned.</h1>
+</div>
+
+<!-- ABOUT STRIP -->
+<div class="about-strip">
+  <div class="about-inner">
+    <img src="photos/myself-1-glacier-crest.webp" alt="John Warmann at Glacier Crest" class="about-photo">
+    <div>
+      <div class="about-label">// the person</div>
+      <p class="about-bio">When I'm not building my next machination, I'm hiking, travelling, and finding new mountains to conquer. Avid photographer — nothing but a cellphone and whatever the trail delivers. All photos shot by me.</p>
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div class="gallery-wrap">
+  <div class="gallery">
+
+    <figure class="gallery-item">
+      <img src="photos/site-20240328_165104~2-EFFECTS-medellin.webp" alt="Medellin" loading="lazy">
+      <figcaption>// medellin</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-20230705_162909~2-EFFECTS-lake-minnewanka.webp" alt="Lake Minnewanka" loading="lazy">
+      <figcaption>// lake minnewanka</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG20240803171802~3-mount-aruthesa-alberta.webp" alt="Mount Aruthesa, Alberta" loading="lazy">
+      <figcaption>// mount aruthesa, alberta</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20190813_134223-lake-louise.webp" alt="Lake Louise" loading="lazy">
+      <figcaption>// lake louise</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-20230304_081612~2-manizales-colombia.webp" alt="Manizales, Colombia" loading="lazy">
+      <figcaption>// manizales, colombia</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20200620_152150-EFFECTS-hockley-valley.webp" alt="Hockley Valley" loading="lazy">
+      <figcaption>// hockley valley</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20201005_174745-savona-bc.webp" alt="Savona, BC" loading="lazy">
+      <figcaption>// savona, bc</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20201008_153620-slocan-river.webp" alt="Slocan River" loading="lazy">
+      <figcaption>// slocan river</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG20240810145956~2-kootenay-national-park.webp" alt="Kootenay National Park" loading="lazy">
+      <figcaption>// kootenay national park</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG20240810141907-kootenay-national-park.webp" alt="Kootenay National Park" loading="lazy">
+      <figcaption>// kootenay national park</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20201011_172747~3-valhalla-provincial-park.webp" alt="Valhalla Provincial Park" loading="lazy">
+      <figcaption>// valhalla provincial park</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20201008_130342-helmcken-falls.webp" alt="Helmcken Falls" loading="lazy">
+      <figcaption>// helmcken falls</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG20251229065727~2-lake-bosomtwi-ghana.webp" alt="Lake Bosomtwi, Ghana" loading="lazy">
+      <figcaption>// lake bosomtwi, ghana</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-20240305_173731~3-EFFECTS-medellin-colombia.webp" alt="Medellin, Colombia" loading="lazy">
+      <figcaption>// medellin, colombia</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-20230226_142316-valle-de-cocora-colombia.webp" alt="Valle de Cocora, Colombia" loading="lazy">
+      <figcaption>// valle de cocora, colombia</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG20240904180909~2-EFFECTS-spotted-lake.webp" alt="Spotted Lake" loading="lazy">
+      <figcaption>// spotted lake</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG20240630161530~2-fish-lake-bc.webp" alt="Fish Lake, BC" loading="lazy">
+      <figcaption>// fish lake, bc</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG20240803162243~2-aruthesa-cirque.webp" alt="Aruthesa Cirque" loading="lazy">
+      <figcaption>// aruthesa cirque</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20190816_093313~2-jasper-alberta-from-above.webp" alt="Jasper, Alberta" loading="lazy">
+      <figcaption>// jasper, alberta</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20201011_130539-drive-up-to-monica-meadows.webp" alt="Monica Meadows" loading="lazy">
+      <figcaption>// monica meadows</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-20230424_140144-volcan-arenal-costa-rica.webp" alt="Volcán Arenal, Costa Rica" loading="lazy">
+      <figcaption>// volcán arenal, costa rica</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20190815_140035-athabasca-glacier.webp" alt="Athabasca Glacier" loading="lazy">
+      <figcaption>// athabasca glacier</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG20241002182047~2-trees.webp" alt="Trees" loading="lazy">
+      <figcaption>// trees</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG20240918164315~2-okanagan-lake.webp" alt="Okanagan Lake" loading="lazy">
+      <figcaption>// okanagan lake</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20201011_170616-PANO-monica-meadows-bc.webp" alt="Monica Meadows, BC" loading="lazy">
+      <figcaption>// monica meadows, bc</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20201008_112648-slocan-park-pano.webp" alt="Slocan Park" loading="lazy">
+      <figcaption>// slocan park</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20200920_141450-EFFECTS-coopers-trail-on.webp" alt="Coopers Trail, Ontario" loading="lazy">
+      <figcaption>// coopers trail, ontario</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-killarney-provincial-park.webp" alt="Killarney Provincial Park" loading="lazy">
+      <figcaption>// killarney provincial park</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG20240918164315~2-penticton.webp" alt="Penticton" loading="lazy">
+      <figcaption>// penticton</figcaption>
+    </figure>
+
+    <figure class="gallery-item">
+      <img src="photos/site-IMG_20190924_142147-lake-superior.webp" alt="Lake Superior" loading="lazy">
+      <figcaption>// lake superior</figcaption>
+    </figure>
+
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="lb-close" aria-label="Close">✕</button>
+  <button class="lightbox-prev" id="lb-prev" aria-label="Previous photo">‹</button>
+  <button class="lightbox-next" id="lb-next" aria-label="Next photo">›</button>
+  <div class="lightbox-inner">
+    <div class="lightbox-img-wrap">
+      <img id="lb-img" src="" alt="">
+      <div class="lightbox-counter" id="lb-counter"></div>
+    </div>
+    <div class="lightbox-caption" id="lb-caption"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 john_warmann</span>
+  <div class="footer-links">
+    <a href="https://t.me/Inn0vative1" target="_blank">telegram</a>
+    <a href="https://github.com/wartech9" target="_blank">github</a>
+    <a href="https://linkedin.com/in/jwarmann" target="_blank">linkedin</a>
+  </div>
+</footer>
+
+<script>
+(function() {
+
+  // NAV BACKGROUND OPACITY ON SCROLL
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', function() {
+    const opacity = Math.min(0.95, 0.85 + window.scrollY / 1000);
+    nav.style.background = `rgba(5, 5, 7, ${opacity})`;
+  }, { passive: true });
+
+  // GALLERY ITEMS — IntersectionObserver with fast stagger
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    root: null,
+    rootMargin: '0px 0px -5% 0px',
+    threshold: 0.05
+  });
+
+  const items = Array.from(document.querySelectorAll('.gallery-item'));
+  items.forEach((item, i) => {
+    item.style.transitionDelay = `${i * 60}ms`;
+    observer.observe(item);
+  });
+
+  // ============================================
+  // LIGHTBOX
+  // ============================================
+  const lightbox  = document.getElementById('lightbox');
+  const lbImg     = document.getElementById('lb-img');
+  const lbCaption = document.getElementById('lb-caption');
+  const lbCounter = document.getElementById('lb-counter');
+  const lbClose   = document.getElementById('lb-close');
+  const lbPrev    = document.getElementById('lb-prev');
+  const lbNext    = document.getElementById('lb-next');
+
+  let current = 0;
+
+  // Build index: src + caption from each gallery item
+  const photos = items.map(item => ({
+    src:     item.querySelector('img').src,
+    alt:     item.querySelector('img').alt,
+    caption: item.querySelector('figcaption').textContent
+  }));
+
+  function openLightbox(index) {
+    current = index;
+    showPhoto(current);
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    lbClose.focus();
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function showPhoto(index) {
+    const p = photos[index];
+    lbImg.classList.remove('loaded');
+    lbImg.alt = p.alt;
+    lbCaption.textContent = p.caption;
+    lbCounter.textContent = `${index + 1} / ${photos.length}`;
+    // Swap src after removing loaded class so fade plays
+    lbImg.onload = () => lbImg.classList.add('loaded');
+    lbImg.src = p.src;
+    // If already cached, onload may not fire
+    if (lbImg.complete) lbImg.classList.add('loaded');
+  }
+
+  function prev() {
+    current = (current - 1 + photos.length) % photos.length;
+    showPhoto(current);
+  }
+
+  function next() {
+    current = (current + 1) % photos.length;
+    showPhoto(current);
+  }
+
+  // Open on gallery item click
+  items.forEach((item, i) => {
+    item.addEventListener('click', () => openLightbox(i));
+  });
+
+  // Controls
+  lbClose.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
+  lbNext.addEventListener('click', (e) => { e.stopPropagation(); next(); });
+
+  // Click backdrop to close
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'ArrowLeft')  prev();
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'Escape')     closeLightbox();
+  });
+
+})();
+</script>
+
+</body>
+</html>

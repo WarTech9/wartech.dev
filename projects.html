@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="John Warmann — Projects across mobile, blockchain, and AI. NESN 360, CheckInn, UXD Finance, ClawSwap MCP, and more.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>〰️</text></svg>">
+<title>Projects — John Warmann</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-display: 'Sora', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    overflow-x: hidden;
+    background: #050507;
+    color: #e8e6e1;
+  }
+
+  /* ============================================
+     NAV
+  ============================================ */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(5, 5, 7, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .nav-mark {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+  }
+  .nav-mark .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: rgba(255,255,255,0.6);
+    margin-left: 2px;
+    animation: blink 1.1s step-end infinite;
+    vertical-align: text-bottom;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .nav-right {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .nav-right a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    letter-spacing: 0px;
+  }
+  .nav-right a:hover {
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .nav-right a.nav-active {
+    color: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.07);
+  }
+
+  .nav-cta {
+    color: #050507 !important;
+    background: #e8e6e1 !important;
+    font-weight: 600;
+  }
+  .nav-cta:hover {
+    background: #fff !important;
+    color: #050507 !important;
+  }
+
+  /* Typing animation for nav mark */
+  .nav-mark-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+    animation: typeIn 1.2s steps(12) 0.5s forwards;
+  }
+
+  @keyframes typeIn {
+    to { width: 12ch; }
+  }
+
+  /* ============================================
+     PAGE HEADER
+  ============================================ */
+  .page-header {
+    padding: 140px 48px 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .page-header-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: rgba(255,255,255,0.2);
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .page-header-title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1.05;
+    color: #e8e6e1;
+    margin-bottom: 16px;
+  }
+
+  .page-header-subtitle {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: rgba(255,255,255,0.3);
+    line-height: 1.7;
+  }
+
+  /* ============================================
+     FILTER TABS
+  ============================================ */
+  .filter-bar {
+    padding: 0 48px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .filter-tab {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    user-select: none;
+  }
+  .filter-tab:hover {
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  .filter-tab.active[data-filter="all"] {
+    background: #e8e6e1;
+    color: #050507;
+    border-color: #e8e6e1;
+  }
+  .filter-tab.active[data-filter="mobile"] {
+    background: #007AFF;
+    color: #fff;
+    border-color: #007AFF;
+  }
+  .filter-tab.active[data-filter="blockchain"] {
+    background: #00e89d;
+    color: #050507;
+    border-color: #00e89d;
+  }
+  .filter-tab.active[data-filter="ai"] {
+    background: #a855f7;
+    color: #fff;
+    border-color: #a855f7;
+  }
+
+  /* ============================================
+     PROJECT GRID
+  ============================================ */
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 0 48px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ============================================
+     PROJECT CARDS
+  ============================================ */
+  .proj-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: all 0.25s;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .proj-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .proj-card:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-2px);
+  }
+
+  .proj-card.hidden {
+    display: none;
+  }
+
+  .proj-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .proj-name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #e8e6e1;
+  }
+
+  .proj-role {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    padding: 3px 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .proj-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .proj-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .badge-mobile {
+    background: rgba(0, 122, 255, 0.12);
+    color: #007AFF;
+    border: 1px solid rgba(0, 122, 255, 0.2);
+  }
+
+  .badge-blockchain {
+    background: rgba(0, 232, 157, 0.1);
+    color: #00e89d;
+    border: 1px solid rgba(0, 232, 157, 0.2);
+  }
+
+  .badge-ai {
+    background: rgba(168, 85, 247, 0.1);
+    color: #a855f7;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+  }
+
+  .proj-desc {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.4);
+    flex: 1;
+  }
+
+  .proj-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .proj-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .proj-stat-val {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 700;
+    color: #e8e6e1;
+    letter-spacing: -0.5px;
+  }
+
+  .proj-stat-key {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Stack tags */
+  .proj-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .stack-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.3);
+    border: 1px solid rgba(255,255,255,0.07);
+    letter-spacing: 0.3px;
+  }
+
+  /* Project links */
+  .proj-links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 4px;
+  }
+
+  .proj-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.03);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .proj-link:hover {
+    color: rgba(255,255,255,0.85);
+    border-color: rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.06);
+  }
+
+  .proj-link-arrow::after {
+    content: ' ↗';
+    opacity: 0.6;
+  }
+
+  /* ============================================
+     FOOTER
+  ============================================ */
+  footer {
+    padding: 20px 48px;
+    border-top: 1px solid rgba(255,255,255,0.03);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #050507;
+  }
+
+  footer span, footer a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.15);
+    text-decoration: none;
+  }
+  footer a:hover { color: rgba(255,255,255,0.4); }
+
+  .footer-links { display: flex; gap: 20px; }
+
+  /* ============================================
+     RESPONSIVE
+  ============================================ */
+  @media (min-width: 1400px) {
+    nav { padding-left: 80px; padding-right: 80px; }
+    .page-header { padding-left: 80px; padding-right: 80px; max-width: none; }
+    .filter-bar { padding-left: 80px; padding-right: 80px; max-width: none; }
+    .project-grid { padding-left: 80px; padding-right: 80px; max-width: none; }
+    footer { padding-left: 80px; padding-right: 80px; }
+  }
+
+  @media (max-width: 900px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-right a:not(.nav-cta) { display: none; }
+    .page-header { padding: 120px 20px 40px; }
+    .filter-bar { padding: 0 20px 36px; }
+    .project-grid { padding: 0 20px 60px; }
+    footer { flex-direction: column; gap: 8px; padding: 16px 20px; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-mark"><span class="nav-mark-text">john_warmann</span><span class="cursor"></span></a>
+  <div class="nav-right">
+    <a href="projects.html" class="nav-active">projects</a>
+    <a href="experience.html">experience</a>
+    <a href="life.html">life</a>
+    <a href="https://t.me/Inn0vative1" target="_blank" class="nav-cta">work with me →</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-label">// projects</div>
+  <h1 class="page-header-title">Things I've built.</h1>
+  <p class="page-header-subtitle">Across mobile, blockchain, and AI.</p>
+</div>
+
+<!-- FILTER TABS -->
+<div class="filter-bar">
+  <button class="filter-tab active" data-filter="all">All</button>
+  <button class="filter-tab" data-filter="mobile">Mobile &amp; Backend</button>
+  <button class="filter-tab" data-filter="blockchain">Blockchain</button>
+  <button class="filter-tab" data-filter="ai">AI</button>
+</div>
+
+<!-- PROJECT GRID -->
+<div class="project-grid">
+
+  <!-- 1. NESN 360 -->
+  <div class="proj-card" data-categories="mobile">
+    <div class="proj-card-top">
+      <span class="proj-name">NESN 360</span>
+      <span class="proj-role">// tech lead</span>
+    </div>
+    <div class="proj-badges">
+      <span class="proj-badge badge-mobile">mobile</span>
+    </div>
+    <p class="proj-desc">New England Sports Network's flagship video streaming app. Led a team of 10 developers to ship live sports streaming on iOS and tvOS. Native video pipeline, real-time sports data integration.</p>
+    <div class="proj-stack">
+      <span class="stack-tag">Swift</span>
+      <span class="stack-tag">iOS</span>
+      <span class="stack-tag">tvOS</span>
+      <span class="stack-tag">UIKit</span>
+      <span class="stack-tag">Android</span>
+      <span class="stack-tag">Kotlin</span>
+    </div>
+    <div class="proj-links">
+      <a href="https://apps.apple.com/us/app/nesn-360/id1218490839" target="_blank" class="proj-link proj-link-arrow">App Store</a>
+    </div>
+  </div>
+
+  <!-- 2. CheckInn -->
+  <div class="proj-card" data-categories="mobile">
+    <div class="proj-card-top">
+      <span class="proj-name">CheckInn</span>
+      <span class="proj-role">// founder &amp; engineer</span>
+    </div>
+    <div class="proj-badges">
+      <span class="proj-badge badge-mobile">mobile</span>
+    </div>
+    <p class="proj-desc">Hotel booking platform built for the African market. Full-stack product from database to mobile-first web app — handling search, availability, payments, and property management.</p>
+    <div class="proj-stack">
+      <span class="stack-tag">NestJS</span>
+      <span class="stack-tag">Node.js</span>
+      <span class="stack-tag">PostgreSQL</span>
+      <span class="stack-tag">React</span>
+      <span class="stack-tag">Next.js</span>
+    </div>
+    <div class="proj-links">
+      <a href="https://checkinn.africa" target="_blank" class="proj-link proj-link-arrow">Live</a>
+    </div>
+  </div>
+
+  <!-- 3. LocalizeWiz -->
+  <div class="proj-card" data-categories="mobile">
+    <div class="proj-card-top">
+      <span class="proj-name">LocalizeWiz</span>
+      <span class="proj-role">// founder</span>
+    </div>
+    <div class="proj-badges">
+      <span class="proj-badge badge-mobile">mobile</span>
+    </div>
+    <p class="proj-desc">Developer tooling for app localization. Native Mac app with Xcode integration, iOS SDK, Android SDK, and tvOS support — streamlining the full localization workflow.</p>
+    <div class="proj-stack">
+      <span class="stack-tag">Swift</span>
+      <span class="stack-tag">Kotlin</span>
+      <span class="stack-tag">iOS</span>
+      <span class="stack-tag">Android</span>
+      <span class="stack-tag">macOS</span>
+      <span class="stack-tag">tvOS</span>
+    </div>
+    <div class="proj-links">
+      <a href="https://github.com/localizewiz/wiz-ios-sdk" target="_blank" class="proj-link proj-link-arrow">iOS SDK</a>
+      <a href="https://github.com/localizewiz/wiz-android-sdk" target="_blank" class="proj-link proj-link-arrow">Android SDK</a>
+    </div>
+  </div>
+
+  <!-- 4. Tip Wallet -->
+  <div class="proj-card" data-categories="mobile blockchain">
+    <div class="proj-card-top">
+      <span class="proj-name">Tip Wallet</span>
+      <span class="proj-role">// founder</span>
+    </div>
+    <div class="proj-badges">
+      <span class="proj-badge badge-mobile">mobile</span>
+      <span class="proj-badge badge-blockchain">blockchain</span>
+    </div>
+    <p class="proj-desc">Crypto wallet that lets users send token transfers by username — predating ENS name resolution. Native iOS and Android apps backed by a Node.js/TypeScript API.</p>
+    <div class="proj-stack">
+      <span class="stack-tag">Swift</span>
+      <span class="stack-tag">iOS</span>
+      <span class="stack-tag">Kotlin</span>
+      <span class="stack-tag">Android</span>
+      <span class="stack-tag">Ethereum</span>
+      <span class="stack-tag">web3.swift</span>
+      <span class="stack-tag">web3.java</span>
+      <span class="stack-tag">Node.js</span>
+      <span class="stack-tag">TypeScript</span>
+    </div>
+    <div class="proj-links">
+      <a href="https://github.com/TipBlockchain/TIP-wallet-ios" target="_blank" class="proj-link proj-link-arrow">iOS</a>
+      <a href="https://github.com/TipBlockchain/TIP-wallet-android" target="_blank" class="proj-link proj-link-arrow">Android</a>
+      <a href="https://github.com/TipBlockchain/chat-server" target="_blank" class="proj-link proj-link-arrow">Backend</a>
+    </div>
+  </div>
+
+  <!-- 5. UXD Finance -->
+  <div class="proj-card" data-categories="blockchain">
+    <div class="proj-card-top">
+      <span class="proj-name">UXD Finance</span>
+      <span class="proj-role">// lead smart contract engineer</span>
+    </div>
+    <div class="proj-badges">
+      <span class="proj-badge badge-blockchain">blockchain</span>
+    </div>
+    <p class="proj-desc">Algorithmic stablecoin backed by a delta-neutral position. Ported from Solana to EVM, deployed across Ethereum, Optimism, and Arbitrum with Curve Finance integrations.</p>
+    <div class="proj-stats">
+      <div class="proj-stat">
+        <span class="proj-stat-val">$15M+</span>
+        <span class="proj-stat-key">assets managed</span>
+      </div>
+      <div class="proj-stat">
+        <span class="proj-stat-val">3</span>
+        <span class="proj-stat-key">chains deployed</span>
+      </div>
+    </div>
+    <div class="proj-stack">
+      <span class="stack-tag">Solidity</span>
+      <span class="stack-tag">Ethereum</span>
+      <span class="stack-tag">Arbitrum</span>
+      <span class="stack-tag">Optimism</span>
+      <span class="stack-tag">Ethers.js</span>
+      <span class="stack-tag">Node.js</span>
+    </div>
+  </div>
+
+  <!-- 6. MAFIA AI -->
+  <div class="proj-card" data-categories="blockchain ai">
+    <div class="proj-card-top">
+      <span class="proj-name">MAFIA AI</span>
+      <span class="proj-role">// builder</span>
+    </div>
+    <div class="proj-badges">
+      <span class="proj-badge badge-blockchain">blockchain</span>
+      <span class="proj-badge badge-ai">AI</span>
+    </div>
+    <p class="proj-desc">Automated crypto trading platform with market intelligence and on-chain execution. Conditional trade triggers based on sentiment signals and market conditions, deployed on Ethereum and Base.</p>
+    <div class="proj-stack">
+      <span class="stack-tag">Solidity</span>
+      <span class="stack-tag">Ethereum</span>
+      <span class="stack-tag">Base</span>
+      <span class="stack-tag">Node.js</span>
+      <span class="stack-tag">PostgreSQL</span>
+      <span class="stack-tag">Supabase</span>
+      <span class="stack-tag">React</span>
+    </div>
+  </div>
+
+  <!-- 7. MAFIA ACP Agent -->
+  <div class="proj-card" data-categories="ai blockchain">
+    <div class="proj-card-top">
+      <span class="proj-name">MAFIA ACP Agent</span>
+      <span class="proj-role">// builder</span>
+    </div>
+    <div class="proj-badges">
+      <span class="proj-badge badge-ai">AI</span>
+      <span class="proj-badge badge-blockchain">blockchain</span>
+    </div>
+    <p class="proj-desc">Market intelligence and conditional execution orchestrator on Virtuals ACP. Acts as both Provider (selling Fear &amp; Greed / sentiment jobs) and Client (hiring swap agents when market conditions trigger). Built on Base with ERC-4337.</p>
+    <div class="proj-stack">
+      <span class="stack-tag">Python</span>
+      <span class="stack-tag">Claude API</span>
+      <span class="stack-tag">virtuals-acp SDK</span>
+      <span class="stack-tag">Supabase</span>
+      <span class="stack-tag">PostgreSQL</span>
+      <span class="stack-tag">Base</span>
+      <span class="stack-tag">ERC-4337</span>
+    </div>
+    <div class="proj-links">
+      <a href="https://github.com/chedda-tech/mafia-acp" target="_blank" class="proj-link proj-link-arrow">GitHub</a>
+    </div>
+  </div>
+
+  <!-- 8. ClawSwap MCP -->
+  <div class="proj-card" data-categories="ai">
+    <div class="proj-card-top">
+      <span class="proj-name">ClawSwap MCP</span>
+      <span class="proj-role">// founder</span>
+    </div>
+    <div class="proj-badges">
+      <span class="proj-badge badge-ai">AI</span>
+    </div>
+    <p class="proj-desc">MCP server that lets AI agents send, swap, and bridge tokens between Solana and Base in a single tool call — gasless, with fees handled via x402 micropayments. Ships as both an npm package and SDK.</p>
+    <div class="proj-stack">
+      <span class="stack-tag">TypeScript</span>
+      <span class="stack-tag">Node.js</span>
+      <span class="stack-tag">MCP SDK</span>
+      <span class="stack-tag">Solana Kit</span>
+      <span class="stack-tag">viem</span>
+      <span class="stack-tag">x402</span>
+      <span class="stack-tag">Zod</span>
+    </div>
+    <div class="proj-links">
+      <a href="https://clawswap.dev" target="_blank" class="proj-link proj-link-arrow">Homepage</a>
+      <a href="https://github.com/wartech9/clawswap-mcp" target="_blank" class="proj-link proj-link-arrow">GitHub</a>
+      <a href="https://www.npmjs.com/package/@clawswap/mcp-server" target="_blank" class="proj-link proj-link-arrow">npm</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 john_warmann</span>
+  <div class="footer-links">
+    <a href="https://t.me/Inn0vative1" target="_blank">telegram</a>
+    <a href="https://github.com/wartech9" target="_blank">github</a>
+    <a href="https://linkedin.com/in/jwarmann" target="_blank">linkedin</a>
+  </div>
+</footer>
+
+<script>
+(function() {
+
+  // ============================================
+  // NAV BACKGROUND OPACITY ON SCROLL
+  // ============================================
+  const nav = document.querySelector('nav');
+
+  function updateNavOpacity() {
+    const scrollY = window.scrollY;
+    const opacity = Math.min(0.95, 0.85 + scrollY / 1000);
+    nav.style.background = `rgba(5, 5, 7, ${opacity})`;
+  }
+
+  window.addEventListener('scroll', updateNavOpacity, { passive: true });
+
+  // ============================================
+  // FILTER TABS
+  // ============================================
+  const tabs = document.querySelectorAll('.filter-tab');
+  const cards = document.querySelectorAll('.proj-card');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Update active tab
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      const filter = tab.getAttribute('data-filter');
+
+      cards.forEach(card => {
+        if (filter === 'all') {
+          card.classList.remove('hidden');
+        } else {
+          const cats = card.getAttribute('data-categories') || '';
+          if (cats.split(' ').indexOf(filter) !== -1) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        }
+      });
+    });
+  });
+
+  // ============================================
+  // SCROLL-TRIGGERED CARD ANIMATIONS
+  // ============================================
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -5% 0px',
+    threshold: 0.05
+  };
+
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        cardObserver.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  cards.forEach((card, i) => {
+    card.style.transitionDelay = `${(i % 2) * 80}ms`;
+    cardObserver.observe(card);
+  });
+
+})();
+</script>
+
+</body>
+</html>
